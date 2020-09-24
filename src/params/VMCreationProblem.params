@@ -1,0 +1,142 @@
+parent.0 = koza.params
+
+# We have one function set, of class GPFunctionSet
+gp.fs.size = 1
+gp.fs.0 = ec.gp.GPFunctionSet
+
+# We'll call the function set "f0"
+gp.fs.0.name = f0
+
+#breed.elite.0 = 10
+
+
+# Problem specific parameters
+# PMCPU               = 13200
+# PMMEM               = 16000
+# PMENERGY            = 540
+
+PMCPU               = 3300
+PMMEM               = 4000
+PMENERGY            = 135
+VMCPUOverheadRate   = 0.1
+VMMemOverhead       = 200
+k                   = 0.7
+
+readFileStartFrom   = 0
+readFileEnd         = 50
+
+
+testCasePath        = /home/tanboxi/IdeaProjects/MaxTan/data/containerData/Container200_REALWORLD_SMALL/testCase
+osPath              = /home/tanboxi/IdeaProjects/MaxTan/data/OSData/OS2Container200/testCase
+vmConfigPath        = /home/tanboxi/IdeaProjects/MaxTan/data/baseConfig/VMConfig/VMConfig_xSmall.csv
+osProPath           = /home/tanboxi/IdeaProjects/MaxTan/data/OSPro/OS2/probability.csv
+benchmarkPath       = /home/tanboxi/IdeaProjects/MaxTan/data/benchmark/realworld/subEnergy.csv
+initEnvPath         = /home/tanboxi/IdeaProjects/MaxTan/data/InitEnv/OS2/Container200_REALWORLD_SMALL/
+
+# We have nine functions in the function set. They are:
+gp.fs.0.size = 8
+gp.fs.0.func.0 = functions.Add
+gp.fs.0.func.0.nc = nc2
+gp.fs.0.func.1 = functions.Mul
+gp.fs.0.func.1.nc = nc2
+gp.fs.0.func.2 = functions.Sub
+gp.fs.0.func.2.nc = nc2
+gp.fs.0.func.3 = functions.Div
+gp.fs.0.func.3.nc = nc2
+#gp.fs.0.func.4 = functions.CoCPU
+#gp.fs.0.func.4.nc = nc0
+#gp.fs.0.func.5 = functions.CoMem
+#gp.fs.0.func.5.nc = nc0
+gp.fs.0.func.4 = functions.LeftVmCPU
+gp.fs.0.func.4.nc = nc0
+gp.fs.0.func.5 = functions.LeftVmMem
+gp.fs.0.func.5.nc = nc0
+#gp.fs.0.func.6 = functions.LeftVmBalance
+#gp.fs.0.func.6.nc = nc0
+gp.fs.0.func.6 = functions.VMCPUOverhead
+gp.fs.0.func.6.nc = nc0
+gp.fs.0.func.7 = functions.VMMEMOverhead
+gp.fs.0.func.7.nc = nc0
+#gp.fs.0.func.10 = functions.GlobalCPUWaste
+#gp.fs.0.func.10.nc = nc0
+#gp.fs.0.func.11 = functions.GlobalMEMWaste
+#gp.fs.0.func.11.nc = nc0
+
+#gp.fs.0.func.6 = functions.VmCPU
+#gp.fs.0.func.6.nc = nc0
+#gp.fs.0.func.7 = functions.VmMem
+#gp.fs.0.func.7.nc = nc0
+#gp.fs.0.func.8 = functions.VmBalance
+#gp.fs.0.func.8.nc = nc0
+#gp.fs.0.func.5 = functions.CoBalance
+#gp.fs.0.func.5.nc = nc0
+
+#gp.fs.0.func.10 = functions.CoOSPro
+#gp.fs.0.func.10.nc = nc0
+#gp.fs.0.func.8 = functions.Abs
+#gp.fs.0.func.8.nc = nc1
+#gp.fs.0.func.7 = functions.Square
+#gp.fs.0.func.7.nc = nc1
+#gp.fs.0.func.12 = functions.MyERC
+#gp.fs.0.func.12.nc = nc0
+#gp.fs.0.func.10 = functions.If
+#gp.fs.0.func.10.nc = nc2
+
+pop.subpop.0.size = 1024
+
+# my own GPIndividual
+pop.subpop.0.species.ind = main.MYGPIndividual
+
+# my selection choice
+# gp.koza.xover.source.0 = ec.select.FitProportionateSelection
+gp.koza.xover.source.0 = ec.select.TournamentSelection
+
+# mutation source is from FitProportionateSelection
+# gp.koza.mutate.source.0 = ec.select.FitProportionateSelection
+gp.koza.mutate.source.0 = ec.select.TournamentSelection
+
+# Reproduction will use Tournament Selection
+breed.reproduce.source.0 = ec.select.TournamentSelection
+
+# mutation maxdepth
+gp.koza.mutate.maxdepth = 7
+
+pop.subpop.0.species.pipe.num-sources = 3
+pop.subpop.0.species.pipe.source.0 = ec.gp.koza.CrossoverPipeline
+pop.subpop.0.species.pipe.source.0.prob = 0.8
+pop.subpop.0.species.pipe.source.1 = ec.breed.ReproductionPipeline
+pop.subpop.0.species.pipe.source.1.prob = 0.1
+pop.subpop.0.species.pipe.source.2 = ec.gp.koza.MutationPipeline
+pop.subpop.0.species.pipe.source.2.prob = 0.1
+
+# cross maxdepth = 7
+gp.koza.xover.maxdepth = 7
+
+#
+gp.koza.half.max-depth = 2
+
+# unless he overrided them locally.
+# I am not sure about these two parameters
+gp.koza.grow.min-depth = 5
+gp.koza.grow.max-depth = 5
+
+generations = 100
+
+select.tournament.size = 7
+
+eval.problem = main.ContainerAllocationProblem
+eval.problem.data = main.DoubleData
+
+# full statistics
+#stat = ec.gp.koza.KozaShortStatistics
+#stat.child.0.do-depth = true
+#stat.child.0.do-size = true
+stat.num-children = 1
+stat.child.0 = ec.gp.koza.KozaShortStatistics
+stat.child.0.do-depth = true
+stat.child.0.do-size = true
+stat.child.0.file = /local/tmp/tanboxi/VMCreationGP/out2.stat
+
+# output statistics to the file
+# the run was started in
+#stat.file                   $out.stat
